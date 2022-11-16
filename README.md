@@ -27,10 +27,32 @@ def search(self):
         first_category.click()
         time.sleep(3)
 ```
-- Other methods include a *create_crawler* which fills *self_crawler* with hrefs to each individual company. This list is then iterated through by the *scrape_stuff* method which adds all relevant data in the form of a dictionary to *self.scraped_data*.
+- Other methods include a *create_crawler* which fills *self_crawler* with hrefs to each individual company
+```
+def create_crawler(self, length):
+        self.length = length
+        #creates a list of the html elements corresponding to different companies 
+        items_list = driver.find_elements(By.XPATH, '//div[@class="paper_paper__1PY90 paper_outline__lwsUX card_card__lQWDv card_noPadding__D8PcU styles_wrapper__2JOo2"]/a')
+        #Iterates through the html elements and puts each href into the crawler
+        for index in range(0, self.length):
+            href = items_list[index].get_attribute('href')
+            self.crawler.append(href)
+        return self.crawler
+```
+- The versatility of Selenium is obvious during the webscraping process. It is an extremely flexible tool that allows very specific interaction with webpages based on their HTML. In the blocks of code above we have demonstrated how elements in the HTML can be found using their class, attribute, the text they contain and their relative position to other HTML elements.
+
+## Milestone 3
+- A funtion called *scrape_stuff* was created that scrapes data from a single company page and saves it in the form of a python dictionary. Included in the item dictionary is a unique id generated using the uuid package (the uuid4 object is converted to a string to allow it to be saved in a json file later on). The *scrape_stuff* function is called in a method that interates through each link in the crawler
 ```
 def scrape_from_crawler(self):
         for item in self.crawler:
             self.scraped_data.append(scrape_stuff(item))
 ```
-- The versatility of Selenium is obvious during the webscraping process. It is an extremely flexible tool that allows very specific interaction with webpages based on their HTML.  
+- A method was created to save the scraped data as a json file, which is the standard file format for data exchange. This was done using the built-in python package json. The file name is generated from *self.category* and saved in a directory called raw_data in the root of the project.
+```
+def save_json(self):
+        file_name = "raw_data/{}.json".format(self.category.replace(" ", "_"))
+        with open(file_name, 'w') as json_file:
+            json.dump(self.scraped_data, json_file)
+```
+
