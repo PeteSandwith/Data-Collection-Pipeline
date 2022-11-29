@@ -33,15 +33,17 @@ class Scraper_Object:
         self.crawler = []
         self.scraped_data = []
         driver.get(url)
+        self.__accept_cookies__()
+        self.__search__()
 
-    def accept_cookies(self):
+    def __accept_cookies__(self):
         """Idenfies the 'accept cookies' button and clicks it."""
         time.sleep(12)
         accept_cookies_button = driver.find_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         accept_cookies_button.click()
         time.sleep(1)
 
-    def search(self):
+    def __search__(self):
         """Searches for the category.
         
         A method that navigates to the search bar, searches for the category that the user input when initialising the class and then directs the driver to the page containing businesses that fall into that category.
@@ -85,7 +87,7 @@ class Scraper_Object:
         """Saves scraped data as a json file.
         
         Uses the self.category to generate a file name and saves the data in scraped_data as a json file. The file is saved in a folder called raw_data in the root of the project."""
-        file_name = "raw_data/{}.json".format(self.category.replace(" ", "_"))
+        file_name = "/Users/petersandwith/Documents/AiCore/TrustPilot_WebScraper/raw_data/{}.json".format(self.category.replace(" ", "_"))
         with open(file_name, 'w') as json_file:
             json.dump(self.scraped_data, json_file)
 
@@ -145,10 +147,8 @@ def scrape_stuff(url):
 
 
 if __name__ == "__main__":
-    Scraper = Scraper_Object('energy supplier', 'https://www.trustpilot.com/')
-    Scraper.accept_cookies()
-    Scraper.search()
-    Scraper.create_crawler(20)
+    Scraper = Scraper_Object('furniture store', 'https://www.trustpilot.com/')
+    Scraper.create_crawler(5)
     Scraper.scrape_from_crawler()
     print(Scraper.scraped_data)
     Scraper.save_json()
