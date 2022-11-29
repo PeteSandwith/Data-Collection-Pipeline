@@ -6,7 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import re
 import uuid
 import json
-driver = webdriver.Chrome()
+
 
 class Scraper_Object:
     """Class upon which methods can be called to drive Google Chrome webrowser and scrape data.
@@ -28,18 +28,19 @@ class Scraper_Object:
             category: String object that indicates what the user would like to search for.
             url: String object, the url of the website.
         """
+        self.driver = webdriver.Chrome()
         self.category = category
         self.url = url
         self.crawler = []
         self.scraped_data = []
-        driver.get(url)
+        self.driver.get(url)
         self.__accept_cookies__()
         self.__search__()
 
     def __accept_cookies__(self):
         """Idenfies the 'accept cookies' button and clicks it."""
         time.sleep(12)
-        accept_cookies_button = driver.find_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+        accept_cookies_button = self.driver.find_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         accept_cookies_button.click()
         time.sleep(1)
 
@@ -48,11 +49,11 @@ class Scraper_Object:
         
         A method that navigates to the search bar, searches for the category that the user input when initialising the class and then directs the driver to the page containing businesses that fall into that category.
         """
-        search_bar = driver.find_element(By.XPATH, '//input[@class="herosearch_searchInputField__Pp2MD"]')
+        search_bar = self.driver.find_element(By.XPATH, '//input[@class="herosearch_searchInputField__Pp2MD"]')
         search_bar.send_keys(self.category)
         time.sleep(3)
         #The following line identifies the first suggested category by finding the following sibling of the 'categories' heading under the search box
-        first_category = driver.find_element(By.XPATH, '//h4[contains(text(),"Categories")]//following-sibling::a')
+        first_category = self.driver.find_element(By.XPATH, '//h4[contains(text(),"Categories")]//following-sibling::a')
         first_category.click()
         time.sleep(3)
     
@@ -69,7 +70,7 @@ class Scraper_Object:
         """
         self.length = length
         #creates a list of the html elements corresponding to different companies 
-        business_list = driver.find_elements(By.XPATH, '//div[@class="paper_paper__1PY90 paper_outline__lwsUX card_card__lQWDv card_noPadding__D8PcU styles_wrapper__2JOo2"]/a')
+        business_list = self.driver.find_elements(By.XPATH, '//div[@class="paper_paper__1PY90 paper_outline__lwsUX card_card__lQWDv card_noPadding__D8PcU styles_wrapper__2JOo2"]/a')
         #Iterates through the html elements and puts each href into the crawler
         for index in range(0, self.length):
             href = business_list[index].get_attribute('href')
@@ -81,7 +82,7 @@ class Scraper_Object:
         
         Iterates through each link from the self.crawler list and uses the scrape_stuff function to scrape all relevant data from each webpage."""
         for business in self.crawler:
-            self.scraped_data.append(scrape_stuff(business))
+            self.scraped_data.append(self.__scrape_stuff__(business))
 
     def save_json(self):
         """Saves scraped data as a json file.
@@ -92,63 +93,63 @@ class Scraper_Object:
             json.dump(self.scraped_data, json_file)
 
 
-def scrape_stuff(url):
-    """Scrapes data from a webpage.
+    def __scrape_stuff__(self, url):
+        """Scrapes data from a webpage.
     
-    A function that scrapes relevant data from a single url and creates a dictionary that contains the scraped data.
+        A function that scrapes relevant data from a single url and creates a dictionary that contains the scraped data.
 
-    Args:
-        url: String object, the href for the webpage to be scraped.
+        Args:
+            url: String object, the href for the webpage to be scraped.
     
-    Returns:
-        item_dictionary: Dictionary object that maps keys to the corresponding data which have been scraped from the webpage.
-    """
-    driver.get(url)
-    time.sleep(1)
-    item_dictionary = {}  
+        Returns:
+            item_dictionary: Dictionary object that maps keys to the corresponding data which have been scraped from the webpage.
+        """
+        self.driver.get(url)
+        time.sleep(1)
+        item_dictionary = {}  
 
-    #Finds name of company
-    Name = driver.find_element(By.XPATH, '//span[@class="typography_display-s__qOjh6 typography_appearance-default__AAY17 title_displayName__TtDDM"]/.').text
-    item_dictionary['Name'] = Name
+        #Finds name of company
+        Name = self.driver.find_element(By.XPATH, '//span[@class="typography_display-s__qOjh6 typography_appearance-default__AAY17 title_displayName__TtDDM"]/.').text
+        item_dictionary['Name'] = Name
 
-    #Gives the item a unique ID (uuid4)
-    item_dictionary['ID'] = str(uuid.uuid4())
+        #Gives the item a unique ID (uuid4)
+        item_dictionary['ID'] = str(uuid.uuid4())
 
-    #Gives the item a timestamp
-    item_dictionary['Timestamp'] = time.time()
+        #Gives the item a timestamp
+        item_dictionary['Timestamp'] = time.time()
 
-    #Adds the href to item_dictionary
-    item_dictionary['Href'] = url
+        #Adds the href to item_dictionary
+        item_dictionary['Href'] = url
 
-    #Finds the number of reviews
-    try:
-        Num_reviews = driver.find_element(By.XPATH, '//p[@class="typography_body-l__KUYFJ typography_appearance-default__AAY17"]/.').text
-        Number_reviews = Num_reviews.split(' ')
-        item_dictionary["Number of Reviews"] = Number_reviews[0]
-    except:
-        item_dictionary["Number of Reviews"] = "N/A"
+        #Finds the number of reviews
+        try:
+            Num_reviews = self.driver.find_element(By.XPATH, '//p[@class="typography_body-l__KUYFJ typography_appearance-default__AAY17"]/.').text
+            Number_reviews = Num_reviews.split(' ')
+            item_dictionary["Number of Reviews"] = Number_reviews[0]
+        except:
+            item_dictionary["Number of Reviews"] = "N/A"
 
-    #Finds the rating 
-    try:
-        Rating = driver.find_element(By.XPATH, '//span[@class="typography_heading-m__T_L_X typography_appearance-default__AAY17"]').text
-        item_dictionary["Rating"] = Rating
-    except:
-        item_dictionary["Rating"] = "N/A"
-    #Finds the email of the company
-    try:
-        Email = driver.find_element(By.XPATH, '//a[@class="link_internal__7XN06 typography_body-m__xgxZ_ typography_appearance-action__9NNRY link_link__IZzHN link_underlined__OXYVM"]').text
-        item_dictionary['Email']= Email
-    except:
-        item_dictionary['Email']= "N/A"
+        #Finds the rating 
+        try:
+            Rating = self.driver.find_element(By.XPATH, '//span[@class="typography_heading-m__T_L_X typography_appearance-default__AAY17"]').text
+            item_dictionary["Rating"] = Rating
+        except:
+            item_dictionary["Rating"] = "N/A"
+        #Finds the email of the company
+        try:
+            Email = self.driver.find_element(By.XPATH, '//a[@class="link_internal__7XN06 typography_body-m__xgxZ_ typography_appearance-action__9NNRY link_link__IZzHN link_underlined__OXYVM"]').text
+            item_dictionary['Email']= Email
+        except:
+            item_dictionary['Email']= "N/A"
 
-    return item_dictionary
+        return item_dictionary
 
 
 
 
 if __name__ == "__main__":
-    Scraper = Scraper_Object('furniture store', 'https://www.trustpilot.com/')
-    Scraper.create_crawler(5)
+    Scraper = Scraper_Object('travel agent', 'https://www.trustpilot.com/')
+    Scraper.create_crawler(20)
     Scraper.scrape_from_crawler()
     print(Scraper.scraped_data)
     Scraper.save_json()
