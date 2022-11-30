@@ -16,25 +16,30 @@ import Scraping_Classes as SC
 
 class Scraper_ObjectTestCase(unittest.TestCase):
     def setUp(self):
+        #instantiates self.tester as an instance of the Scraper_Object class
         self.tester = SC.Scraper_Object('energy supplier', 'https://www.trustpilot.com/')
         
 
-    def test_create_crawler(self):
-        self.tester.create_crawler(1)
-        length = len(self.tester.crawler)
-        #Checks that the lenght of the crawler is equal to the number input into create_crawler as length
-        self.assertEqual(1, length)
+    #def test_create_crawler(self):
+        #Calls the create_crawler method on self.tester with a length argument of 1
+        #self.tester.create_crawler(2)
+    
+        #Checks that the lenght of the crawler is equal to the number input into create_crawler
+        #length = len(self.tester.crawler)
+        #self.assertEqual(2, length)
         #Checks whether the crawler is a list
-        self.assertIsInstance(self.tester.crawler, list, "Crawler is not a list object")
+        #self.assertIsInstance(self.tester.crawler, list, "Crawler is not a list object")
         #Checks whether the items inside the crawler are strings
-        self.assertIsInstance(self.tester.crawler[0], str, "Url in crawler is not a string object")
+        #self.assertIsInstance(self.tester.crawler[0], str, "Url in crawler is not a string object")
 
-    #def test_scrape_stuff(self):
-        #url = 'https://www.trustpilot.com/review/igs.com'
-       # data = scrape_stuff(url)
-        #Checks whether the scrape_stuff function returns a dictionary.
-       #test.assertIsInstance(data, dict, "The scraped data is not stored in a dictionary")
-        #Could be good to check the values of the different items in the dictionary, however these will possibly change over time
-
+    def test_scrape_from_cralwer(self):
+        self.tester.crawler = ['https://www.trustpilot.com/review/integrityenergy.com']
+        self.tester.scrape_from_crawler()
+        data = self.tester.scraped_data
+        #Checks that data is a list
+        self.assertIsInstance(data, list, "The scraped data is not stored in a list")
+        #Checks that the list elements (representing data for one specific business) are dictionaries 
+        self.assertIsInstance(data[0], dict, "The elements in data are not dictionary objects")
+        
 if __name__ == "__main__":
     unittest.main()
