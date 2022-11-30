@@ -59,7 +59,7 @@ def save_json(self):
 - Testing code is vitally important for ensuring that it is running as intended. The unit testing paradigm tests each small, fundamental 'unit' of code independently to check that they function correctly when receiving a particular input.
 - In this case the units that were tested were the individual methods of the Scraper_Class. A separate script, test_Scraping_Classes.py, was created to perform unit testing on the methods of the Scraping_Object class. This script imports the classes and methods from Scraping_Classes.py. The built in python module unit was also imported, which allows the user to easily write and run tests.
 - Unit tests were written for every public method from the Scraper_Object class. For instance, the unit test for the create_crawler method checks that the crawler that the method returns is a list object, that the entries are string objects and that the crawler is the correct length. 
-'''
+```
 def test_create_crawler(self):
         #Calls the create_crawler method on self.tester with a length argument of 1
         self.tester.create_crawler(2)
@@ -67,13 +67,15 @@ def test_create_crawler(self):
         #Checks that the lenght of the crawler is equal to the number input into create_crawler
         length = len(self.tester.crawler)
         self.assertEqual(2, length)
+        
         #Checks whether the crawler is a list
         self.assertIsInstance(self.tester.crawler, list, "Crawler is not a list object")
+        
         #Checks whether the items inside the crawler are strings
         self.assertIsInstance(self.tester.crawler[0], str, "Url in crawler is not a string object")
-'''
+```
 - The test_Scraping_Classes.py script can be run from the terminal to automatically test all of the public methods of the scraper class. If any of these tests fail, a message explaining the reason for the failure will be returned to the terminal:
-'''
+```
 ======================================================================
 FAIL: test_scrape_from_cralwer (__main__.Scraper_ObjectTestCase)
 ----------------------------------------------------------------------
@@ -86,4 +88,4 @@ AssertionError: False is not true : The keys of the dictionary in self.scraped_d
 Ran 1 test in 64.602s
 
 FAILED (failures=1)
-'''
+```
