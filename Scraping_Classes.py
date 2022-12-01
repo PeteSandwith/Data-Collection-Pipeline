@@ -1,11 +1,11 @@
-from selenium import webdriver
-import time
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
-import re
-import uuid
+from selenium import webdriver
 import json
+import re
+import time
+import uuid
 
 
 class Scraper_Object:
