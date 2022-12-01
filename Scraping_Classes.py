@@ -1,7 +1,8 @@
+from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import json
 import re
 import time
@@ -22,13 +23,18 @@ class Scraper_Object:
     """
 
     def __init__(self, category, url):
-        """Initiates an instance of the Scraper_Object class.
+        """Instantiates an instance of the Scraper_Object class.
         
         Args:
             category: String object that indicates what the user would like to search for.
             url: String object, the url of the website.
         """
-        self.driver = webdriver.Chrome()
+        #The following code ensures that the web driver runs in headless mode with no GUI
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("window-size=1920,1080")
+        self.driver = webdriver.Chrome(options=options)
+    
         self.category = category
         self.url = url
         self.crawler = []
@@ -148,7 +154,7 @@ class Scraper_Object:
 
 
 if __name__ == "__main__":
-    Scraper = Scraper_Object('travel agent', 'https://www.trustpilot.com/')
+    Scraper = Scraper_Object('jewelry store', 'https://www.trustpilot.com/')
     Scraper.create_crawler(20)
     Scraper.scrape_from_crawler()
     print(Scraper.scraped_data)

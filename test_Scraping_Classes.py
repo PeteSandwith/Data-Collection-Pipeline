@@ -1,18 +1,14 @@
+from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import Scraping_Classes as SC
 import json
 import re
 import time
 import unittest
 import uuid
-
-
-
-
-
 
 
 
