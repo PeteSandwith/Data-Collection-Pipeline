@@ -27,13 +27,13 @@ class Scraper_Object:
         
         Args:
             category: String object that indicates what the user would like to search for.
-            url: String object, the url of the website.
+            url: String object, the url of the website. 
         """
         #The following code ensures that the web driver runs in headless mode with no GUI
-        options = Options()
-        options.add_argument("--headless")
-        options.add_argument("window-size=1920,1080")
-        self.driver = webdriver.Chrome(options=options)
+        #options = Options()
+        #options.add_argument("--headless")
+        #options.add_argument("window-size=1920,1080")
+        self.driver = webdriver.Chrome()
     
         self.category = category
         self.url = url
@@ -75,13 +75,18 @@ class Scraper_Object:
             self.crawler: list object that contains hrefs for individual businesses.
         """
         self.length = length
-        #creates a list of the html elements corresponding to different companies 
-        business_list = self.driver.find_elements(By.XPATH, '//div[@class="paper_paper__1PY90 paper_outline__lwsUX card_card__lQWDv card_noPadding__D8PcU styles_wrapper__2JOo2"]/a')
-        #Iterates through the html elements and puts each href into the crawler
-        for index in range(0, self.length):
-            href = business_list[index].get_attribute('href')
-            self.crawler.append(href)
-        return self.crawler
+        #While loop adds hrefs to the crawler whilst the desired length of the crawler is greater than 20 (there are 20 items on each page of search results)
+        while self.length > 20:
+            #creates a list of the html elements corresponding to different companies 
+            business_list = self.driver.find_elements(By.XPATH, '//div[@class="paper_paper__1PY90 paper_outline__lwsUX card_card__lQWDv card_noPadding__D8PcU styles_wrapper__2JOo2"]/a')
+            #Iterates through the html elements and puts each href into the crawler
+            for index in range(0, 20):
+                href = business_list[index].get_attribute('href')
+                self.crawler.append(href)
+            self.length += -20
+            self.__next_page__()
+
+
 
     def scrape_from_crawler(self):
         """Scrapes data from the webpage of each business and adds this data to scraped_data.
@@ -150,12 +155,16 @@ class Scraper_Object:
 
         return item_dictionary
 
-
-
+    def __next_page__(self):
+        next_page_button = self.driver.find_element(By.XPATH, '//a[@aria-label="Next page"]')
+        try:
+            next_page_button.click()
+        except: 
+            pass
 
 if __name__ == "__main__":
-    Scraper = Scraper_Object('jewelry store', 'https://www.trustpilot.com/')
-    Scraper.create_crawler(20)
+    Scraper = Scraper_Object('car dealer', 'https://www.trustpilot.com/')
+    Scraper.create_crawler(2)
     Scraper.scrape_from_crawler()
     print(Scraper.scraped_data)
     Scraper.save_json()
