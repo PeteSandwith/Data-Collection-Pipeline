@@ -30,9 +30,9 @@ class Scraper_Object:
             url: String object, the url of the website. 
         """
         #The following code ensures that the web driver runs in headless mode with no GUI
-        #options = Options()
-        #options.add_argument("--headless")
-        #options.add_argument("window-size=1920,1080")
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("window-size=1920,1080")
         self.driver = webdriver.Chrome()
     
         self.category = category
@@ -83,10 +83,19 @@ class Scraper_Object:
             for index in range(0, 20):
                 href = business_list[index].get_attribute('href')
                 self.crawler.append(href)
-            self.length += -20
+            self.length -= 20
+            #Try to click on the next page button
             self.__next_page__()
-
-
+            time.sleep(3)
+            
+        
+        #creates a list of the html elements corresponding to different companies
+        business_list = self.driver.find_elements(By.XPATH, '//div[@class="paper_paper__1PY90 paper_outline__lwsUX card_card__lQWDv card_noPadding__D8PcU styles_wrapper__2JOo2"]/a')
+        #Iterates through the html elements and puts each href into the crawler
+        for index in range(0, self.length):
+            href = business_list[index].get_attribute('href')
+            self.crawler.append(href)
+        return self.crawler
 
     def scrape_from_crawler(self):
         """Scrapes data from the webpage of each business and adds this data to scraped_data.
@@ -157,14 +166,12 @@ class Scraper_Object:
 
     def __next_page__(self):
         next_page_button = self.driver.find_element(By.XPATH, '//a[@aria-label="Next page"]')
-        try:
-            next_page_button.click()
-        except: 
-            pass
+        next_page_button.click()
+        
 
 if __name__ == "__main__":
-    Scraper = Scraper_Object('car dealer', 'https://www.trustpilot.com/')
-    Scraper.create_crawler(2)
+    Scraper = Scraper_Object('jewelry store', 'https://www.trustpilot.com/')
+    Scraper.create_crawler(100)
     Scraper.scrape_from_crawler()
     print(Scraper.scraped_data)
     Scraper.save_json()
