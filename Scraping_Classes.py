@@ -111,6 +111,7 @@ class Scraper_Object:
         file_name = "/Users/petersandwith/Documents/AiCore/TrustPilot_WebScraper/raw_data/{}.json".format(self.category.replace(" ", "_"))
         with open(file_name, 'w') as json_file:
             json.dump(self.scraped_data, json_file)
+        self.driver.quit()
 
 
     def __scrape_stuff__(self, url):
@@ -170,8 +171,8 @@ class Scraper_Object:
         
 
 if __name__ == "__main__":
-    Scraper = Scraper_Object('jewelry store', 'https://www.trustpilot.com/')
-    Scraper.create_crawler(100)
+    Scraper = Scraper_Object('energy supplier', 'https://www.trustpilot.com/')
+    Scraper.create_crawler(2)
     Scraper.scrape_from_crawler()
     print(Scraper.scraped_data)
     Scraper.save_json()
