@@ -22,7 +22,7 @@ class Scraper_Object:
     
     """
 
-    def __init__(self, category, url):
+    def __init__(self):
         """Instantiates an instance of the Scraper_Object class.
         
         Args:
@@ -33,13 +33,14 @@ class Scraper_Object:
         options = Options()
         options.add_argument("--headless")
         options.add_argument("window-size=1920,1080")
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(options=options)
     
-        self.category = category
-        self.url = url
+        self.category = input("Input the category you would like to search for:")
+        self.length = int(input("Input the number of companies you would like to extract data from:"))
+        self.url = 'https://www.trustpilot.com/'
         self.crawler = []
         self.scraped_data = []
-        self.driver.get(url)
+        self.driver.get(self.url)
         self.__accept_cookies__()
         self.__search__()
 
@@ -48,14 +49,14 @@ class Scraper_Object:
         time.sleep(12)
         accept_cookies_button = self.driver.find_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         accept_cookies_button.click()
-        time.sleep(1)
+        time.sleep(3)
 
     def __search__(self):
         """Searches for the category.
         
         A method that navigates to the search bar, searches for the category that the user input when initialising the class and then directs the driver to the page containing businesses that fall into that category.
         """
-        search_bar = self.driver.find_element(By.XPATH, '//input[@class="herosearch_searchInputField__Pp2MD"]')
+        search_bar = self.driver.find_element(By.XPATH, '//input[@class="styles_searchInputField__Ltvjz"]')
         search_bar.send_keys(self.category)
         time.sleep(3)
         #The following line identifies the first suggested category by finding the following sibling of the 'categories' heading under the search box
@@ -63,7 +64,7 @@ class Scraper_Object:
         first_category.click()
         time.sleep(3)
     
-    def create_crawler(self, length):
+    def create_crawler(self):
         """Creates a list object with hrefs as the individual elements.
         
         Iterates through each of the items in the search results and adds the individual href for each item's webpage to a list.append
@@ -74,7 +75,6 @@ class Scraper_Object:
         Returns:
             self.crawler: list object that contains hrefs for individual businesses.
         """
-        self.length = length
         #While loop adds hrefs to the crawler whilst the desired length of the crawler is greater than 20 (there are 20 items on each page of search results)
         while self.length > 20:
             #creates a list of the html elements corresponding to different companies 
@@ -171,8 +171,8 @@ class Scraper_Object:
         
 
 if __name__ == "__main__":
-    Scraper = Scraper_Object('energy supplier', 'https://www.trustpilot.com/')
-    Scraper.create_crawler(2)
+    Scraper = Scraper_Object()
+    Scraper.create_crawler()
     Scraper.scrape_from_crawler()
     print(Scraper.scraped_data)
     Scraper.save_json()
