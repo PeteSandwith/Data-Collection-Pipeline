@@ -29,11 +29,12 @@ class Scraper_Object:
             category: String object that indicates what the user would like to search for.
             url: String object, the url of the website. 
         """
-        #The following code ensures that the web driver runs in headless mode with no GUI
+        #The following code specifies the option settings that are required to run the webdriver in headless mode
         options = Options()
-        options.add_argument("--headless")
         #Skips certain security features 
         options.add_argument('--no-sandbox')
+        #The following code ensures that the web driver runs in headless mode with no GUI
+        options.add_argument("--headless")
         #Disables memory sharing between system and container
         options.add_argument('--disable-dev-shm-usage')
         #Disables GPU usage for windows
