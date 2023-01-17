@@ -32,6 +32,12 @@ class Scraper_Object:
         #The following code ensures that the web driver runs in headless mode with no GUI
         options = Options()
         options.add_argument("--headless")
+        #Skips certain security features 
+        options.add_argument('--no-sandbox')
+        #Disables memory sharing between system and container
+        options.add_argument('--disable-dev-shm-usage')
+        #Disables GPU usage for windows
+        options.add_argument('--disable-gpu')
         options.add_argument("window-size=1920,1080")
         self.driver = webdriver.Chrome(options=options)
     
