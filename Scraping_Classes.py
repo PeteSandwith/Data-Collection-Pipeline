@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
 import json
+import os
 import re
 import time
 import uuid
@@ -109,8 +110,9 @@ class Scraper_Object:
         """Saves scraped data as a json file.
         
         Uses the self.category to generate a file name and saves the data in scraped_data as a json file. The file is saved in a folder called raw_data in the root of the project."""
-        file_name = "/Users/petersandwith/Documents/AiCore/TrustPilot_WebScraper/raw_data/{}.json".format(self.category.replace(" ", "_"))
-        with open(file_name, 'w') as json_file:
+        file_name = "raw_data/{}.json".format(self.category.replace(" ", "_"))
+        current_directory = os.getcwd()
+        with open(os.path.join(current_directory, file_name), 'w') as json_file:
             json.dump(self.scraped_data, json_file)
         self.driver.quit()
 
