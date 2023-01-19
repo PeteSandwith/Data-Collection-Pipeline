@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options
 import json
 import re
 import time
@@ -31,16 +31,10 @@ class Scraper_Object:
         """
         #The following code specifies the option settings that are required to run the webdriver in headless mode
         options = Options()
-        #Skips certain security features 
-        options.add_argument('--no-sandbox')
         #The following code ensures that the web driver runs in headless mode with no GUI
         options.add_argument("--headless")
-        #Disables memory sharing between system and container
-        options.add_argument('--disable-dev-shm-usage')
-        #Disables GPU usage for windows
-        options.add_argument('--disable-gpu')
         options.add_argument("window-size=1920,1080")
-        self.driver = webdriver.Chrome(options=options)
+        self.driver = webdriver.Firefox(options=options)
     
         self.category = input("Input the category you would like to search for:")
         self.length = int(input("Input the number of companies you would like to extract data from:"))
