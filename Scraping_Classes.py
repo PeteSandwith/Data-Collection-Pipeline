@@ -30,9 +30,8 @@ class Scraper_Object:
             category: String object that indicates what the user would like to search for.
             url: String object, the url of the website. 
         """
-        #The following code specifies the option settings that are required to run the webdriver in headless mode
+        #The following code specifies the option settings that are required to run the webdriver in headless mode with no GUI
         options = Options()
-        #The following code ensures that the web driver runs in headless mode with no GUI
         options.add_argument("--headless")
         options.add_argument("window-size=1920,1080")
         self.driver = webdriver.Firefox(options=options)
