@@ -89,3 +89,8 @@ Ran 1 test in 64.602s
 
 FAILED (failures=1)
 ```
+## Milestone 5
+- The scraper was containerised using Docker. Containerisation allows for applications to be packaged along with their dependencies so that they can be run seamlessly on different machines, regardless of the specific OS or packages used by that machine. Rather than spending time configuring your machine to run an application and downloading all of the dependencies required by the application, you can simply use docker to bring up an instance of the application.
+- A Dockerfile was created in the root of the project. This contains a list of instructions that is used by docker to build an image of the application, which serves as a blueprint to create containers; specific instances of an application which can be created on any machine with Docker installed. 
+- Containerising using Docker has several advantages over the approach of constructing a virtual machine (VM) to run an application. Each VM requires a full-blown operating system - this makes them slow to start as an entire OS must be loaded to run the VM. VMs are also far more resource intensive as each VM uses up a slice of the physical resources such as CPU, memory and disc space. 
+- Using Docker you can run multiple containers with different versions of the dependencies simultaneously on the same machine. When finished with an application you can remove the application and all of its dependencies in one go. 
