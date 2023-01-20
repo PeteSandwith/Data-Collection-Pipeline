@@ -16,12 +16,12 @@ import uuid
 class Scraper_ObjectTestCase(unittest.TestCase):
     def setUp(self):
         #instantiates self.tester as an instance of the Scraper_Object class
-        self.tester = SC.Scraper_Object('energy supplier', 'https://www.trustpilot.com/')
+        self.tester = SC.Scraper_Object()
         
 
     def test_create_crawler(self):
         #Calls the create_crawler method on self.tester with a length argument of 1
-        self.tester.create_crawler(2)
+        self.tester.create_crawler()
     
         #Checks that the lenght of the crawler is equal to the number input into create_crawler
         length = len(self.tester.crawler)
