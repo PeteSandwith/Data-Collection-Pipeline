@@ -1,5 +1,5 @@
 # Data-Collection-Pipeline
-An industry grade data colleciton pipeline which uses the python package Selenium to scrape data from review website Trustpilot. The system automatically controls Chrome to extract relevant data from the website. The data is stored on the cloud using AWS/RDS. It conforms to industry best practices such as being containerised in Docker and running automated tests.
+An industry grade data colleciton pipeline which uses the python package Selenium to scrape data from review website Trustpilot. The system automatically controls Chrome to extract relevant data from the website. It conforms to industry best practices such as being containerised in Docker and running automated tests.
 
 ## Milestone 1
 - The review website Trustpilot was chosen as a target for data scraping, as it contains several pieces of useful data that could be used to compare different companies (average review, number of reviews, contact email ect). Companies are grouped by category depending on what industry they serve and this was something I wanted the user to be able to specify when running the web scraper.
